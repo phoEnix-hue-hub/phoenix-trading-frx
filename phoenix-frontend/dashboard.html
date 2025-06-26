@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Phoenix Trading FRX - Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="font-inter bg-gray-900 text-white min-h-screen flex">
+  <!-- Sidebar -->
+  <aside class="w-64 bg-gray-800 h-screen sticky top-0 p-6 flex flex-col">
+    <div class="text-2xl font-bold text-orange-500 mb-8">Phoenix Trading FRX</div>
+    <nav class="flex-grow space-y-4">
+      <a href="#dashboard" class="flex items-center space-x-2 text-gray-300 hover:text-orange-500" onclick="showDashboardSection()">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7m-9 5v6h4v-6m2-2l2 2"/></path></svg>
+        <span>Dashboard</span>
+      </a>
+      <a href="#trade" class="flex items-center space-x-2 text-gray-300 hover:text-orange-500" onclick="showTradeSection()">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></path></svg>
+        <span>Trade</span>
+      </a>
+      <a href="#portfolio" class="flex items-center space-x-2 text-gray-300 hover:text-orange-500" onclick="showPortfolioSection()">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8"/></path></svg>
+        <span>Portfolio</span>
+      </a>
+      <a href="#transactions" class="flex items-center space-x-2 text-gray-300 hover:text-orange-500" onclick="showTransactionsSection()">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></path></svg>
+        <span>Transactions</span>
+      </a>
+      <a href="#settings" class="flex items-center space-x-2 text-gray-300 hover:text-orange-500">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z M12 15a3 3 0 100-6 3 3 0 000 6z"/></path></svg>
+        <span>Settings</span>
+      </a>
+    </nav>
+    <a href="/index.html" class="flex items-center space-x-2 text-gray-300 hover:text-orange-500 mt-auto" onclick="logout()">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></path></svg>
+      <span>Logout</span>
+    </a>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="flex-1 p-6">
+    <div id="dashboard-section">
+      <!-- Header -->
+      <header class="flex justify-between items-center mb-8">
+        <h1 class="text-2xl font-bold">Welcome, <span id="user-name"></span>!</h1>
+        <div class="flex items-center space-x-4">
+          <span class="text-gray-400" id="last-login">Last Login: [Timestamp]</span>
+          <div class="w-10 h-10 bg-orange-500 rounded-full flex items-center justify-center text-xl font-bold" id="user-initial">[U]</div>
+        </div>
+      </header>
+
+      <!-- Account Balance -->
+      <section class="bg-gray-800 p-6 rounded-lg mb-6">
+        <h2 class="text-xl font-semibold mb-4">Account Balance</h2>
+        <div class="flex flex-col md:flex-row justify-between items-center">
+          <div>
+            <p class="text-3xl font-bold text-orange-500">$<span id="user-balance">0.00</span></p>
+            <p class="text-gray-400">Available Balance (USD)</p>
+          </div>
+          <div class="mt-4 md:mt-0 space-x-4">
+            <button class="bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600" onclick="deposit()">Deposit</button>
+            <button class="bg-gray-700 text-white px-4 py-2 rounded-lg hover:bg-gray-600" onclick="withdraw()">Withdraw</button>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <div id="trade-section" class="hidden">
+      <section class="bg-gray-800 p-6 rounded-lg mb-6">
+        <h2 class="text-xl font-semibold mb-4">Trade</h2>
+        <div class="form-group">
+          <label for="trade-amount" class="block mb-2">Purchase Crypto Amount (USD):</label>
+          <input type="number" id="trade-amount" class="w-full p-2 rounded" placeholder="Enter amount" min="10" required>
+        </div>
+        <button class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 mt-4" onclick="buyCrypto()">Buy Crypto</button>
+      </section>
+    </div>
+
+    <div id="portfolio-section" class="hidden">
+      <section class="bg-gray-800 p-6 rounded-lg mb-6">
+        <h2 class="text-xl font-semibold mb-4">Portfolio Overview</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4" id="portfolio-overview">
+          <!-- Populated dynamically -->
+        </div>
+      </section>
+    </div>
+
+    <div id="transactions-section" class="hidden">
+      <section class="bg-gray-800 p-6 rounded-lg">
+        <h2 class="text-xl font-semibold mb-4">Recent Transactions</h2>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left" id="transactions-table">
+            <thead>
+              <tr class="text-gray-400">
+                <th class="p-2">Date</th>
+                <th class="p-2">Type</th>
+                <th class="p-2">Asset</th>
+                <th class="p-2">Amount</th>
+                <th class="p-2">Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Populated dynamically -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+
+    <!-- Payment Section -->
+    <div id="payment-section" class="hidden bg-gray-800 p-6 rounded-lg mb-6">
+      <h2 class="text-xl font-semibold mb-4">Deposit or Buy Crypto with Trust Wallet via Mesh</h2>
+      <div class="mb-4">
+        <label for="payment-amount" class="block mb-2">Amount (USD):</label>
+        <input type="number" id="payment-amount" class="w-full p-2 rounded text-white bg-gray-700 border border-gray-600" placeholder="Enter amount" min="10" required style="color: #ffffff !important; opacity: 1;">
+      </div>
+      <div id="payment-address" class="mb-4 text-gray-400"></div> <!-- Display Trust Wallet address -->
+      <div id="payment-instructions" class="mb-4 text-gray-300">
+        1. Download Trust Wallet from <a href="https://trustwallet.com" target="_blank" rel="noopener noreferrer" class="text-orange-500">here</a>.<br>
+        2. Use Trust Wallet to buy crypto or transfer funds.<br>
+        3. Send the crypto to the address below.
+      </div>
+      <div id="fallback-button" class="hidden mt-4">
+        <button class="bg-yellow-600 text-white px-4 py-2 rounded hover:bg-yellow-700" onclick="mockPayment()">Mock Payment (Fallback)</button>
+      </div>
+      <p class="text-gray-400 mt-2">Accepted payments: Crypto via Trust Wallet</p>
+    </div>
+  </main>
+
+  <script>
+    console.log('Script loaded');
+    document.getElementById('payment-amount').addEventListener('input', initPayment);
+
+    let currentUser = JSON.parse(localStorage.getItem('currentUser')) || null;
+    let balance = currentUser ? currentUser.balance || 0 : 0;
+    let isCryptoPurchase = false;
+
+    // Mock backend function
+    function mockBackend(endpoint, data) {
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          if (endpoint === '/api/exodus-address') {
+            const mockAddress = `bc1q${Math.random().toString(36).substring(2, 18)}`;
+            resolve({ address: mockAddress });
+          } else if (endpoint.includes('/auth/update-balance')) {
+            resolve({ success: true, message: 'Balance updated' });
+          } else if (endpoint.includes('/auth/update-central-wallet')) {
+            resolve({ success: true, message: 'Central wallet updated' });
+          } else {
+            resolve({ error: 'Unknown endpoint' });
+          }
+        }, 500);
+      });
+    }
+
+    function updateUI() {
+      const userName = document.getElementById('user-name');
+      const userBalance = document.getElementById('user-balance');
+      const userInitial = document.getElementById('user-initial');
+      const lastLogin = document.getElementById('last-login');
+      if (currentUser) {
+        userName.textContent = currentUser.name || 'Guest';
+        userInitial.textContent = currentUser.name ? currentUser.name[0].toUpperCase() : 'U';
+        userBalance.textContent = balance.toFixed(2);
+        lastLogin.textContent = `Last Login: ${new Date(currentUser.lastLogin || Date.now()).toLocaleString()}`;
+      } else {
+        window.location.href = '/index.html';
+      }
+      fetchPortfolio();
+      fetchTransactions();
+    }
+
+    function showSection(sectionId) {
+      document.querySelectorAll('div[id$="-section"]').forEach(section => section.classList.add('hidden'));
+      document.getElementById(sectionId).classList.remove('hidden');
+    }
+
+    function showDashboardSection() { showSection('dashboard-section'); }
+    function showTradeSection() { showSection('trade-section'); }
+    function showPortfolioSection() { showSection('portfolio-section'); }
+    function showTransactionsSection() { showSection('transactions-section'); }
+    function showPaymentSection(crypto = false) {
+      showSection('payment-section');
+      isCryptoPurchase = crypto;
+      document.getElementById('payment-amount').value = '';
+      document.getElementById('payment-address').textContent = '';
+      document.getElementById('fallback-button').classList.add('hidden');
+    }
+
+    function addTrade() {
+      const amount = parseFloat(document.getElementById('trade-amount').value);
+      if (amount > 0 && currentUser) {
+        balance += amount;
+        updateUI();
+        alert('Trade added successfully!');
+        document.getElementById('trade-amount').value = '';
+        fetch('https://your-backend.onrender.com/auth/update-balance', { // Replace with actual URL
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username: currentUser.username, balance })
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (!data.success) console.error('Balance update failed:', data.message);
+        })
+        .catch(error => {
+          console.error('Backend error:', error);
+          mockBackend('/auth/update-balance', { username: currentUser.username, balance })
+            .then(() => console.log('Mock balance update successful'));
+        });
+      } else {
+        alert('Please enter a valid amount.');
+      }
+    }
+
+    function buyCrypto() {
+      if (!currentUser) {
+        alert('Please log in to buy crypto.');
+        return;
+      }
+      showPaymentSection(true);
+    }
+
+    function deposit() {
+      showPaymentSection(false);
+    }
+
+    function withdraw() {
+      const amount = parseFloat(prompt('Enter withdrawal amount:'));
+      if (amount > 0 && amount <= balance && currentUser) {
+        balance -= amount;
+        updateUI();
+        alert('Withdrawal successful!');
+        fetch('https://your-backend.onrender.com/auth/update-balance', { // Replace with actual URL
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username: currentUser.username, balance })
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (!data.success) console.error('Balance update failed:', data.message);
+        })
+        .catch(error => {
+          console.error('Backend error:', error);
+          mockBackend('/auth/update-balance', { username: currentUser.username, balance })
+            .then(() => console.log('Mock balance update successful'));
+        });
+      } else {
+        alert('Insufficient balance or invalid amount.');
+      }
+    }
+
+    function logout() {
+      localStorage.removeItem('currentUser');
+      currentUser = null;
+      balance = 0;
+      window.location.href = '/index.html';
+    }
+
+    function fetchPortfolio() {
+      const portfolioData = [
+        { asset: 'BTC', amount: 2.354, value: 45678.90, change: 3.2 },
+        { asset: 'ETH', amount: 15.789, value: 32123.45, change: -1.5 },
+        { asset: 'ADA', amount: 10234.56, value: 5678.12, change: 5.1 },
+      ];
+      const portfolioSection = document.getElementById('portfolio-overview');
+      portfolioSection.innerHTML = portfolioData.map(item => `
+        <div class="p-4 bg-gray-900 rounded-lg">
+          <p class="text-lg font-semibold">${item.asset}</p>
+          <p class="text-gray-400">${item.amount} ${item.asset}</p>
+          <p class="${item.change > 0 ? 'text-green-500' : 'text-red-500'}">${item.change}% ($${item.value.toFixed(2)})</p>
+        </div>
+      `).join('');
+    }
+
+    function fetchTransactions() {
+      const transactionData = [
+        { date: '2025-06-20', type: 'Buy', asset: 'BTC', amount: '0.123 BTC ($2,345.67)', status: 'Completed' },
+        { date: '2025-06-19', type: 'Sell', asset: 'ETH', amount: '1.456 ETH ($3,789.01)', status: 'Completed' },
+        { date: '2025-06-18', type: 'Deposit', asset: 'USD', amount: '$5,000.00', status: 'Pending' },
+      ];
+      const tbody = document.getElementById('transactions-table').getElementsByTagName('tbody')[0];
+      tbody.innerHTML = transactionData.map(item => `
+        <tr class="border-t border-gray-700">
+          <td class="p-2">${item.date}</td>
+          <td class="p-2">${item.type}</td>
+          <td class="p-2">${item.asset}</td>
+          <td class="p-2">${item.amount}</td>
+          <td class="p-2 ${item.status === 'Completed' ? 'text-green-500' : 'text-yellow-500'}">${item.status}</td>
+        </tr>
+      `).join('');
+    }
+
+    function initPayment() {
+      console.log('initPayment called');
+      const amountInput = document.getElementById('payment-amount');
+      const amount = parseFloat(amountInput.value);
+      const addressDisplay = document.getElementById('payment-address');
+      const fallbackButton = document.getElementById('fallback-button');
+      if (isNaN(amount) || amount < 10 || !currentUser) {
+        console.log('initPayment skipped: invalid amount or no user');
+        addressDisplay.textContent = '';
+        fallbackButton.classList.add('hidden');
+        return;
+      }
+      const backendUrl = 'https://your-backend.onrender.com/api/exodus-address'; // Replace with actual Render URL
+      fetch(backendUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ amount: amount.toFixed(2), userId: currentUser.username })
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.address) {
+          addressDisplay.innerHTML = `Send ${amount.toFixed(2)} USD worth of crypto to:<br><strong>${data.address}</strong>`;
+          fallbackButton.classList.add('hidden');
+          console.log('Address fetched:', data.address);
+        } else {
+          addressDisplay.textContent = 'Error fetching address. Please try again.';
+          fallbackButton.classList.remove('hidden');
+        }
+      })
+      .catch(error => {
+        console.error('Backend error:', error);
+        mockBackend('/api/exodus-address', { amount: amount.toFixed(2) })
+          .then(data => {
+            if (data.address) {
+              addressDisplay.innerHTML = `Send ${amount.toFixed(2)} USD worth of crypto to:<br><strong>${data.address}</strong> (Mock)`;
+              fallbackButton.classList.add('hidden');
+              console.log('Mock address fetched:', data.address);
+            }
+          });
+      });
+    }
+
+    function mockPayment() {
+      const amountInput = document.getElementById('payment-amount');
+      const amount = parseFloat(amountInput.value);
+      if (isNaN(amount) || amount < 10 || !currentUser) {
+        alert('Please enter a valid amount of $10 or more.');
+        return;
+      }
+      if (isCryptoPurchase) {
+        balance += amount;
+        updateUI();
+        fetch('https://your-backend.onrender.com/auth/update-balance', { // Replace with actual URL
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username: currentUser.username, balance })
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (!data.success) console.error('Balance update failed:', data.message);
+        })
+        .catch(error => {
+          console.error('Backend error:', error);
+          mockBackend('/auth/update-balance', { username: currentUser.username, balance })
+            .then(() => console.log('Mock balance update successful'));
+        });
+        fetch('https://your-backend.onrender.com/auth/update-central-wallet', { // Replace with actual URL
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ amount })
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (!data.success) console.error('Central wallet update failed:', data.message);
+        })
+        .catch(error => {
+          console.error('Backend error:', error);
+          mockBackend('/auth/update-central-wallet', { amount })
+            .then(() => console.log('Mock central wallet update successful'));
+        });
+        alert('Mock crypto purchase successful! Balance and central wallet updated (simulated).');
+      } else {
+        balance += amount;
+        updateUI();
+        fetch('https://your-backend.onrender.com/auth/update-balance', { // Replace with actual URL
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username: currentUser.username, balance })
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (!data.success) console.error('Balance update failed:', data.message);
+        })
+        .catch(error => {
+          console.error('Backend error:', error);
+          mockBackend('/auth/update-balance', { username: currentUser.username, balance })
+            .then(() => console.log('Mock balance update successful'));
+        });
+        alert('Mock deposit successful! Balance updated (simulated).');
+      }
+    }
+
+    // Handle URL parameters for payment callback
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('payment') === 'success') {
+      const amount = parseFloat(urlParams.get('amount') || '0');
+      const isCrypto = urlParams.get('crypto') === 'true';
+      if (isCrypto && amount > 0) {
+        balance += amount;
+        updateUI();
+        fetch('https://your-backend.onrender.com/auth/update-balance', { // Replace with actual URL
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username: currentUser.username, balance })
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (!data.success) console.error('Balance update failed:', data.message);
+        })
+        .catch(error => {
+          console.error('Backend error:', error);
+          mockBackend('/auth/update-balance', { username: currentUser.username, balance })
+            .then(() => console.log('Mock balance update successful'));
+        });
+        fetch('https://your-backend.onrender.com/auth/update-central-wallet', { // Replace with actual URL
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ amount })
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (!data.success) console.error('Central wallet update failed:', data.message);
+        })
+        .catch(error => {
+          console.error('Backend error:', error);
+          mockBackend('/auth/update-central-wallet', { amount })
+            .then(() => console.log('Mock central wallet update successful'));
+        });
+        alert('Crypto purchase processed! Check your balance and central wallet.');
+      } else if (amount > 0) {
+        balance += amount;
+        updateUI();
+        fetch('https://your-backend.onrender.com/auth/update-balance', { // Replace with actual URL
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username: currentUser.username, balance })
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (!data.success) console.error('Balance update failed:', data.message);
+        })
+        .catch(error => {
+          console.error('Backend error:', error);
+          mockBackend('/auth/update-balance', { username: currentUser.username, balance })
+            .then(() => console.log('Mock balance update successful'));
+        });
+        alert('Deposit processed! Check your balance.');
+      }
+    } else if (urlParams.get('payment') === 'cancel') {
+      alert('Payment was canceled.');
+    }
+
+    // Show dashboard section by default
+    showDashboardSection();
+    if (currentUser) updateUI();
+    else window.location.href = '/index.html';
+  </script>
+</body>
+</html>

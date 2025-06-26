@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - Phoenix Trading FRX</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="font-inter bg-gray-900 text-white flex items-center justify-center min-h-screen">
+  <div class="bg-gray-800 p-8 rounded-lg shadow-lg w-full max-w-md">
+    <h2 class="text-2xl font-bold mb-6 text-center">Login</h2>
+    <form id="login-form">
+      <div class="mb-4">
+        <label for="login-identifier" class="block mb-2">Email or Phone:</label>
+        <input type="text" id="login-identifier" class="w-full p-3 bg-gray-700 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500" required>
+      </div>
+      <div class="mb-6">
+        <label for="login-password" class="block mb-2">Password:</label>
+        <input type="password" id="login-password" class="w-full p-3 bg-gray-700 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500" required>
+      </div>
+      <button type="submit" class="w-full bg-orange-500 text-white p-3 rounded-lg hover:bg-orange-600">Login</button>
+    </form>
+    <p class="mt-4 text-center text-gray-400">Don't have an account? <a href="/signup.html" class="text-orange-500 hover:underline">Sign up here</a></p>
+  </div>
+  <script>
+    document.getElementById('login-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const identifier = document.getElementById('login-identifier').value;
+      const password = document.getElementById('login-password').value;
+      try {
+        const response = await fetch('http://localhost:3001/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ identifier, password }),
+        });
+        const result = await response.json();
+        if (result.success) {
+          localStorage.setItem('currentUser', JSON.stringify(result.user));
+          window.location.href = '/dashboard.html';
+        } else {
+          alert(result.message);
+        }
+      } catch (error) {
+        console.error('Error logging in:', error);
+      }
+    });
+  </script>
+</body>
+</html>
