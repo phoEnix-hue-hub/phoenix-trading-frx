@@ -1,7 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { ExpressAdapter } from '@nestjs/platform-express';
 import express from 'express'; // Default import
-import * as mongoose from 'mongoose';
+import mongoose from 'mongoose'; // Default import
 import { AppModule } from './app.module';
 
 const expressApp = express();
