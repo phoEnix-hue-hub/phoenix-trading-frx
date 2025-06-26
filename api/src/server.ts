@@ -11,7 +11,7 @@ export default async (req: any, res: any) => {
     logger: ['error', 'warn'],
   });
 
-  // Connect to MongoDB with modern options
+  // Connect to MongoDB with modern options (no deprecated parameters)
   try {
     await mongoose.connect(process.env.MONGODB_URI!);
     console.log('Connected to MongoDB');
