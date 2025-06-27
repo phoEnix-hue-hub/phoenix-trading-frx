@@ -1,9 +1,10 @@
-// src/auth/auth.service.ts (add these imports and methods)
+// src/auth/auth.service.ts
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { User, UserDocument } from '../schemas/user.schema';
 import * as bcrypt from 'bcrypt';
+import { sign } from 'jsonwebtoken'; // Import jsonwebtoken
 
 @Injectable()
 export class AuthService {
@@ -45,7 +46,7 @@ export class AuthService {
     }
   }
 
-  async login(identifier: string, password: string): Promise<{ success: boolean; message?: string; user?: any }> {
+  async login(identifier: string, password: string): Promise<{ success: boolean; message?: string; user?: any; token?: string }> {
     const user = await this.userModel.findOne({
       $or: [{ email: identifier }, { phone: identifier }],
     }).exec();
@@ -62,6 +63,14 @@ export class AuthService {
     user.lastLogin = new Date();
     await user.save();
 
+    // Generate JWT token
+    const payload = {
+      id: user._id.toString(),
+      email: user.email,
+      name: user.name,
+    };
+    const token = sign(payload, process.env.JWT_SECRET!, { expiresIn: '1h' });
+
     return {
       success: true,
       user: {
@@ -71,6 +80,7 @@ export class AuthService {
         balance: user.balance,
         lastLogin: user.lastLogin,
       },
+      token, // Return the generated token
     };
   }
 
@@ -86,7 +96,6 @@ export class AuthService {
   }
 
   async updateCentralWallet(amount: number): Promise<{ success: boolean; message?: string }> {
-    // Assuming a central wallet document or field exists
     let centralWallet = await this.userModel.findOne({ email: 'central-wallet@phoenix-trading.frx' }).exec();
     if (!centralWallet) {
       centralWallet = new this.userModel({

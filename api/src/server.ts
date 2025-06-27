@@ -1,7 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { ExpressAdapter } from '@nestjs/platform-express';
-import express from 'express'; // Default import
-import mongoose from 'mongoose'; // Default import
+import express from 'express';
+import mongoose from 'mongoose';
 import { AppModule } from './app.module';
 
 const expressApp = express();
@@ -11,7 +11,7 @@ export default async (req: any, res: any) => {
     logger: ['error', 'warn'],
   });
 
-  // Connect to MongoDB with modern options (no deprecated parameters)
+  // Connect to MongoDB
   try {
     await mongoose.connect(process.env.MONGODB_URI!);
     console.log('Connected to MongoDB');
@@ -22,7 +22,4 @@ export default async (req: any, res: any) => {
 
   await app.init();
   await app.getHttpAdapter().getInstance().handle(req, res);
-
-  // Close MongoDB connection
-  await mongoose.connection.close();
 };
