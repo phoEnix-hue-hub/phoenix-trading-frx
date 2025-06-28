@@ -1,70 +1,65 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Signup - Phoenix Trading</title>
-    <link rel="stylesheet" href="styles.css" />
-    <title>PhoenixTradingFRX</title>
+    <title>Phoenix Trading FRX</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
-  </head>
-  <body>
-    <div class="container">
-      <h1>Sign Up</h1>
-      <form id="signupForm">
-        <div>
-          <label for="name">Name:</label>
-          <input type="text" id="name" name="name" required />
-        </div>
-        <div>
-          <label for="phone">Phone:</label>
-          <input type="text" id="phone" name="phone" required />
-        </div>
-        <div>
-          <label for="email">Email:</label>
-          <input type="email" id="email" name="email" required />
-        </div>
-        <div>
-          <label for="password">Password:</label>
-          <input type="password" id="password" name="password" required />
-        </div>
-        <button type="submit">Sign Up</button>
-      </form>
-      <p>Already have an account? <a href="login.html">Login</a></p>
+</head>
+<body class="font-inter bg-gray-900 text-white min-h-screen flex items-center justify-center">
+    <div class="container max-w-md p-6 bg-gray-800 rounded-lg shadow-md">
+        <h1 class="text-3xl font-bold text-center mb-6">Sign Up</h1>
+        <form id="signupForm" class="space-y-4">
+            <div>
+                <label for="name" class="block text-sm font-medium">Name:</label>
+                <input type="text" id="name" name="name" required class="mt-1 p-2 w-full bg-gray-700 rounded text-white" />
+            </div>
+            <div>
+                <label for="phone" class="block text-sm font-medium">Phone:</label>
+                <input type="text" id="phone" name="phone" required class="mt-1 p-2 w-full bg-gray-700 rounded text-white" />
+            </div>
+            <div>
+                <label for="email" class="block text-sm font-medium">Email:</label>
+                <input type="email" id="email" name="email" required class="mt-1 p-2 w-full bg-gray-700 rounded text-white" />
+            </div>
+            <div>
+                <label for="password" class="block text-sm font-medium">Password:</label>
+                <input type="password" id="password" name="password" required class="mt-1 p-2 w-full bg-gray-700 rounded text-white" />
+            </div>
+            <button type="submit" class="w-full bg-orange-500 text-white p-2 rounded hover:bg-orange-600">Sign Up</button>
+        </form>
+        <p class="text-center mt-4">Already have an account? <a href="/phoenix-frontend/login.html" class="text-orange-500 hover:underline">Login</a></p>
     </div>
     <script>
-      document
-        .getElementById("signupForm")
-        .addEventListener("submit", async (e) => {
-          e.preventDefault();
-          const formData = new FormData(e.target);
-          const url =
-            "https://phoenix-trading-pfnkacdtg-phoenixs-projects-300fd110.vercel.app/auth/register";
-          try {
-            const response = await fetch(url, {
-              method: "POST",
-              body: JSON.stringify({
-                name: formData.get("name"),
-                phone: formData.get("phone"),
-                email: formData.get("email"),
-                password: formData.get("password"),
-              }),
-              headers: { "Content-Type": "application/json" },
-            });
-            const result = await response.json();
-            console.log(result);
-            if (result.success) {
-              alert("Signup successful!");
-              window.location.href = "login.html";
-            } else {
-              alert("Signup failed: " + result.message);
+        document.getElementById("signupForm").addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            const url = "https://phoenix-trading-pfnkacdtg-phoenixs-projects-300fd110.vercel.app/auth/register";
+            try {
+                const response = await fetch(url, {
+                    method: "POST",
+                    body: JSON.stringify({
+                        name: formData.get("name"),
+                        phone: formData.get("phone"),
+                        email: formData.get("email"),
+                        password: formData.get("password"),
+                    }),
+                    headers: { "Content-Type": "application/json" },
+                });
+                const result = await response.json();
+                console.log(result);
+                if (result.success) {
+                    alert("Signup successful!");
+                    window.location.href = "/phoenix-frontend/login.html";
+                } else {
+                    alert("Signup failed: " + result.message);
+                }
+            } catch (error) {
+                console.error("Error signing up:", error);
+                alert("An error occurred. Please try again.");
             }
-          } catch (error) {
-            console.error("Error signing up:", error);
-            alert("An error occurred. Please try again.");
-          }
         });
     </script>
-  </body>
+</body>
 </html>

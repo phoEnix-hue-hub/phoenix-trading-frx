@@ -3,27 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - Phoenix Trading</title>
-    <link rel="stylesheet" href="styles.css">
-    <title>PhoenixTradingFRX</title>
+    <title>Phoenix Trading FRX</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-    <div class="container">
-        <h1>Login</h1>
-        <form id="loginForm">
+<body class="font-inter bg-gray-900 text-white min-h-screen flex items-center justify-center">
+    <div class="container max-w-md p-6 bg-gray-800 rounded-lg shadow-md">
+        <h1 class="text-3xl font-bold text-center mb-6">Login</h1>
+        <form id="loginForm" class="space-y-4">
             <div>
-                <label for="identifier">Email or Phone:</label>
-                <input type="text" id="identifier" name="identifier" required>
+                <label for="identifier" class="block text-sm font-medium">Email or Phone:</label>
+                <input type="text" id="identifier" name="identifier" required class="mt-1 p-2 w-full bg-gray-700 rounded text-white">
             </div>
             <div>
-                <label for="password">Password:</label>
-                <input type="password" id="password" name="password" required>
+                <label for="password" class="block text-sm font-medium">Password:</label>
+                <input type="password" id="password" name="password" required class="mt-1 p-2 w-full bg-gray-700 rounded text-white">
             </div>
-            <button type="submit">Login</button>
+            <button type="submit" class="w-full bg-orange-500 text-white p-2 rounded hover:bg-orange-600">Login</button>
         </form>
-        <p>Don't have an account? <a href="signup.html">Sign Up</a></p>
+        <p class="text-center mt-4">Don't have an account? <a href="/phoenix-frontend/signup.html" class="text-orange-500 hover:underline">Sign Up</a></p>
     </div>
     <script>
         document.getElementById('loginForm').addEventListener('submit', async (e) => {
@@ -43,9 +41,14 @@
                 console.log(result);
                 if (result.success) {
                     alert('Login successful!');
-                    // Redirect or store token as needed
-                    localStorage.setItem('token', result.token);
-                    window.location.href = 'dashboard.html'; // Adjust as needed
+                    localStorage.setItem('currentUser', JSON.stringify({
+                        username: formData.get('identifier').split('@')[0],
+                        name: "Test User",
+                        balance: 1000,
+                        lastLogin: Date.now(),
+                        email: formData.get('identifier'),
+                    }));
+                    window.location.href = '/phoenix-frontend/dashboard.html';
                 } else {
                     alert('Login failed: ' + result.message);
                 }
