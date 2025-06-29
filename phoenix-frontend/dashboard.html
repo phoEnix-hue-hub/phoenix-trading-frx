@@ -22,11 +22,11 @@
             <p><strong>Balance:</strong> $<span id="userBalance">Loading...</span></p>
             <p><strong>Last Login:</strong> <span id="userLastLogin">Loading...</span></p>
         </div>
-        <div id="paymentSection" class="p-4 bg-gray-800 rounded-lg shadow-md" style="display: none;">
+        <div id="paymentSection" class="p-4 bg-gray-800 rounded-lg shadow-md" style="display: none;">     
             <h2 class="text-2xl font-semibold mb-4">Payment</h2>
             <input type="number" id="amount" placeholder="Amount" required class="p-2 rounded bg-gray-700 text-white w-full mb-4">
             <button onclick="generateAddress()" class="bg-orange-500 text-white px-4 py-2 rounded hover:bg-orange-600">Generate Address</button>
-            <p id="addressResult" class="mt-4"></p>
+            <p id="addressResult" class="mt-4"></p>  
         </div>
     </div>
     <script>
@@ -42,51 +42,26 @@
                 document.getElementById('userLastLogin').textContent = new Date(user.lastLogin).toLocaleString();
                 document.getElementById('paymentSection').style.display = 'block';
             } else {
-                alert('Please log in first.');
+                alert('Please log in first.');       
                 window.location.href = '/phoenix-frontend/login.html';
             }
         };
 
-        // Login form submission
-        document.getElementById('loginForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-            const response = await fetch(url + '/auth/login', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ identifier: email, password }),
-            });
-            const data = await response.json();
-            if (data.success) {
-                localStorage.setItem('currentUser', JSON.stringify({
-                    username: email.split('@')[0],
-                    name: "Test User",
-                    balance: 1000,
-                    lastLogin: Date.now(),
-                    email,
-                }));
-                window.location.href = '/phoenix-frontend/dashboard.html';
-            } else {
-                alert('Login failed');
-            }
-        });
-
         // Generate address
         async function generateAddress() {
             const amount = document.getElementById('amount').value;
-            const response = await fetch(url + '/auth/exodus-address', {
+            const response = await fetch(url + '/api/auth/exodus-address', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ amount }),
+                body: JSON.stringify({ amount }),    
             });
-            const data = await response.json();
+            const data = await response.json();      
             document.getElementById('addressResult').textContent = data.address || 'Error generating address';
         }
 
         // Logout function
         function logout() {
-            localStorage.removeItem('currentUser');
+            localStorage.removeItem('currentUser');  
             window.location.href = '/phoenix-frontend/login.html';
         }
     </script>

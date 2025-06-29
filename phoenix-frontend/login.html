@@ -10,7 +10,7 @@
 <body class="font-inter bg-gray-900 text-white min-h-screen flex items-center justify-center">
     <div class="container max-w-md p-6 bg-gray-800 rounded-lg shadow-md">
         <h1 class="text-3xl font-bold text-center mb-6">Login</h1>
-        <form id="loginForm" class="space-y-4">
+        <form id="loginForm" class="space-y-4">      
             <div>
                 <label for="identifier" class="block text-sm font-medium">Email or Phone:</label>
                 <input type="text" id="identifier" name="identifier" required class="mt-1 p-2 w-full bg-gray-700 rounded text-white">
@@ -21,15 +21,15 @@
             </div>
             <button type="submit" class="w-full bg-orange-500 text-white p-2 rounded hover:bg-orange-600">Login</button>
         </form>
-        <p class="text-center mt-4">Don't have an account? <a href="/phoenix-frontend/signup.html" class="text-orange-500 hover:underline">Sign Up</a></p>
+        <p class="text-center mt-4">Don't have an account? <a href="/phoenix-frontend/signup.html" class="text-orange-500 hover:underline">Sign Up</a></p>     
     </div>
     <script>
         document.getElementById('loginForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            const formData = new FormData(e.target);
-            const url = "https://phoenix-trading-pfnkacdtg-phoenixs-projects-300fd110.vercel.app/auth/login";
+            const formData = new FormData(e.target); 
+            const url = "https://phoenix-trading-pfnkacdtg-phoenixs-projects-300fd110.vercel.app/api/auth/login";
             try {
-                const response = await fetch(url, {
+                const response = await fetch(url, {  
                     method: 'POST',
                     body: JSON.stringify({
                         identifier: formData.get('identifier'),
@@ -37,15 +37,15 @@
                     }),
                     headers: { 'Content-Type': 'application/json' }
                 });
-                const result = await response.json();
+                const result = await response.json();                
                 console.log(result);
                 if (result.success) {
-                    alert('Login successful!');
+                    alert('Login successful!');      
                     localStorage.setItem('currentUser', JSON.stringify({
                         username: formData.get('identifier').split('@')[0],
                         name: "Test User",
                         balance: 1000,
-                        lastLogin: Date.now(),
+                        lastLogin: Date.now(),       
                         email: formData.get('identifier'),
                     }));
                     window.location.href = '/phoenix-frontend/dashboard.html';
